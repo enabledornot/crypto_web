@@ -1,16 +1,20 @@
-import init, {sum_numbers, fermat_test} from "./pkg/crypto_web.js"
+import init, {sum_numbers, fermat_test, init_rust} from "./pkg/crypto_web.js"
 
 async function run() {
     await init();
+    init_rust();
     function calculateSum() {
-        const p_prime = parseInt($("#prime_test").value);
+        const p_prime = parseInt($("#prime_test").val());
         var aes = [];
         $(".a_input.input").each(function(index, element) {
             const value = element.value;
             aes.push(parseInt(value));
         });
-        alert(aes);
+        // alert(p_prime);
+        // alert(aes);
         const result = fermat_test(p_prime, aes);
+        alert(result.result);
+        alert(result.pow_result)
         document.getElementById("result").innerText = 'Sum: ' + result;
     }
     $("#calculate").click(calculateSum);
