@@ -4,12 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 <body>
-    <label for="input_a">Input A:</label>
-    <input type="number" id="input_a" name="input_a" min="0">
-    <label for="input_b">Input B:</label>
-    <input type="number" id="input_b" name="input_b" min="0">
+    <label for="prime_test">Enter Potential Prime:</label>
+    <input type="number" id="prime_test" name="prime_test" min="0">
+    <div id="multi-input" class="a_input outer">
+        <label for="a_1">A1 = </label>
+        <input type="number" id="a_1" name="a_1" min="0" class="a_input input">
+    </div>
+    <button id="cloneButton">Add More A</button>
     <button id="calculate">Calculate</button>
     <p id="result"></p>
     <script type="module" src="app.js"></script>
