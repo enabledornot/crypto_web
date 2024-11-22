@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block page %}
+<label for="prime_test">Enter Potential Prime:</label>
+    <input type="number" id="prime_test" name="prime_test" min="0">
+    <div id="multi-input" class="a_input outer">
+        <label for="a_1">A1 = </label>
+        <input type="number" id="a_1" name="a_1" min="0" class="a_input input">
+    </div>
+    <button id="cloneButton">Add More A</button>
+    <button id="calculate">Calculate</button>
+    <div id="result_div">
+        <p>
+            \[ a^p-1 \mod p \equiv 1 \]
+        </p>
+        <div id="fermat_eq"></div>
+        <p id="is_prime"></p>
+    </div>
+    <p id="result"></p>
+    <script type="module" src="static/fermat.js"></script>
+{% endblock %}

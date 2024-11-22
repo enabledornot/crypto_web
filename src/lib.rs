@@ -3,6 +3,7 @@ extern crate console_error_panic_hook;
 use std::panic;
 
 pub mod fermat;
+pub mod miller-rabin;
 
 #[wasm_bindgen]
 pub fn sum_numbers(a: i32, b: i32) -> i32 {
