@@ -1,7 +1,7 @@
 from flask import Flask, render_template, send_from_directory
 
 app = Flask(__name__)
-
+app.config['TEMPLATES_AUTO_RELOAD'] = True
 @app.route('/')
 def home():
     return render_template('base.html')

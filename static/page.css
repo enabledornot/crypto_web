@@ -4,6 +4,10 @@
     box-sizing: border-box;
 }
 
+.center {
+    margin:20px;
+}
+
 .container {
     display: flex;
     height: 100vh;

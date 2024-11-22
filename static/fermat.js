@@ -1,4 +1,4 @@
-import init, {sum_numbers, fermat_test, init_rust} from "./pkg/crypto_web.js"
+import init, {sum_numbers, fermat_test, init_rust} from "/pkg/crypto_web.js"
 
 async function run() {
     await init();
@@ -13,9 +13,23 @@ async function run() {
         // alert(p_prime);
         // alert(aes);
         const result = fermat_test(p_prime, aes);
-        alert(result.result);
-        alert(result.pow_result)
-        document.getElementById("result").innerText = 'Sum: ' + result;
+        // alert(result.result);
+        const c = result.result;
+        const pw = result.pow_result;
+        $('#fermat_eq').empty();
+        for (var i = 0; i < pw.length; i++) {
+            $('#fermat_eq').append(`<p> \\[${aes[i]}^${p_prime-1} \\mod ${p_prime} \\equiv ${pw[i]}\\] </p>`);
+        }
+        // $('#result_div').append('<p> \[a^p-1 \mod p \equiv 1\] </p>')
+        // document.getElementById("result").innerText = 'Sum: ' + result;
+        if (c) {
+            $('#result').text(`${p_prime} is probably prime`);
+        }
+        else {
+            $('#result').text(`${p_prime} is not prime`);
+        }
+        MathJax.typeset();
+
     }
     $("#calculate").click(calculateSum);
 }
