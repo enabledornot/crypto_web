@@ -1,6 +1,6 @@
 use wasm_bindgen::prelude::*;
 use js_sys::Array;
-
+use std::collections::HashMap;
 
 #[wasm_bindgen]
 pub fn aks_test(n: i32) -> bool {
@@ -28,7 +28,7 @@ pub fn aks_test(n: i32) -> bool {
 // this method computes whether a given number is a perfect power
 // step 1
 pub fn perfect_power(n: i32) -> bool {
-    let max_a = (f64::sqrt(number as f64)) as i32;
+    let max_a = (f64::sqrt(n as f64)) as i32;
     for i in 2..=max_a {
         let mut b = 1;
         while b < n {
@@ -94,8 +94,8 @@ fn aDivN(n: i32, r: i32) -> bool {
 fn phi(n: i32) -> i32 {
     let prime_factors = primeFac(n);
     let mut prod = 1;
-    for (p, k) in &prime_factors {
-        prod *= (p-1).pow(k)
+    for (p, &k) in &prime_factors {
+        prod *= (p-1).pow(k as u32)
     }
     return prod;
 }
@@ -132,10 +132,12 @@ fn primeFac(n: i32) -> HashMap<i32,i32> {
 }
 
 fn apply_modxr(vec: &mut Vec<i32>, n: i32, r: i32) {
-    while vec.len() > r {
+    while vec.len() > r as usize {
         let a = vec.pop();
-        let indx = (vec.len() + 1) % r;
-        vec[indx] = (vec[indx] + a) % n;
+        let indx = (vec.len() + 1) % r as usize;
+        if let Some(a_real) = a {
+            vec[indx] = (vec[indx] + a_real) % n;
+        }
     }
 }
 
@@ -148,8 +150,8 @@ fn offset_add(vec: &mut Vec<i32>, n: i32) {
 
 fn generate_pascal(level: i32, r: i32, n: i32) -> Vec<i32> {
     let mut vec = vec![1,1];
-    for 1..n {
-        offset_add(&mut vec);
+    for _ in 1..n {
+        offset_add(&mut vec, n);
     }
     return vec;
 }
@@ -157,20 +159,20 @@ fn generate_pascal(level: i32, r: i32, n: i32) -> Vec<i32> {
 // step 5
 fn step_5(n: i32, r: i32) -> bool {
     let phi_r = phi(r) as f64;
-    let n_log = (n as f64).log(2);
-    let a_bound: i32 = ((phi_r).sqrt() * n_log).floor();
+    let n_log = (n as f64).log(2.0);
+    let a_bound: i32 = ((phi_r).sqrt() * n_log).floor() as i32;
     let nth_pascal = generate_pascal(n,r,n);
     for a in 1..=a_bound {
-        let mut my_pascal = nth_pascal.copy();
+        let mut my_pascal = nth_pascal.clone();
         let mut a_powd = 1;
         for (i, x) in my_pascal.iter_mut().enumerate() {
             *x = (*x * a_powd) % n;
             a_powd = (a_powd * a) % n;
         }
-        my_pascal.pop(0);
+        my_pascal.remove(0);
         my_pascal.pop();
         for x in my_pascal.iter() {
-            if x != 0 {
+            if *x != 0 {
                 return false;
             }
         }
