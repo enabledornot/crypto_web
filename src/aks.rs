@@ -3,44 +3,63 @@ use js_sys::Array;
 use std::collections::HashMap;
 
 #[wasm_bindgen]
-pub fn aks_test(n: i32) -> bool {
+pub fn aks_test(n: i32) -> i32 {
     // step 1
     if perfect_power(n) {
-        return false;
+        return 1;
     }
     // step 2
     let r = smallestR(n);
     if gcd(r,n) != 1 {
-        return false;
+        return 2;
     }
-    // step 3
+    // // step 3
     if aDivN(n,r) {
-        return false;
+        return 3;
     }
     // step 4
     if n <= r {
-        return true;
+        return 4;
     }
     // step 5
-    return step_5(n,r);
+    if step_5(n,r) {
+        return 0;
+    }
+    else {
+        return 5;
+    }
+    return -1;
 }
 
 // this method computes whether a given number is a perfect power
 // step 1
 pub fn perfect_power(n: i32) -> bool {
-    let max_a = (f64::sqrt(n as f64)) as i32;
-    for i in 2..=max_a {
-        let mut b = 1;
-        while b < n {
-            b = b * n;
+    let mut e = 2;
+    while true {
+        if 2_i32.pow(e) > n {
+            return false;
         }
-        if b == n {
+        let mut low = 0_i32;
+        let mut high = 1_i32;
+        while high.pow(e) <= n {
+            high = high * 2;
+        }
+        while high - low > 1 {
+            let middle = (low+high) / 2;
+            if middle.pow(e) <= n {
+                low = middle;
+            }
+            else {
+                high = middle;
+            }
+        }
+        if low.pow(e) == n {
             return true;
         }
+        e = e + 1;
     }
-    return false;
+    return true;
 }
-
 // euclidian algortihm
 fn gcd(a_in: i32, b_in: i32) -> i32 {
     let mut a = a_in;
@@ -77,6 +96,7 @@ fn smallestR(n: i32) -> i32 {
         if let Some(new_ord) = m_order(r,n) {
             ord_side = new_ord;
         }
+        r = r + 1;
     }
     return r;
 }

@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block page %}
+<label for="prime_test">Enter Potential Prime:</label>
+    <input type="number" id="prime_test" name="prime_test" min="0">
+    <button id="calculate">Calculate</button>
+    <div id="result_div">
+
+    </div>
+    <p id="result"></p>
+    <script type="module" src="static/aks.js"></script>
+{% endblock %}
