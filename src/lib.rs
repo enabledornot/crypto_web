@@ -4,6 +4,7 @@ use std::panic;
 
 pub mod fermat;
 pub mod miller_rabin;
+pub mod aks;
 
 #[wasm_bindgen]
 pub fn sum_numbers(a: i32, b: i32) -> i32 {
