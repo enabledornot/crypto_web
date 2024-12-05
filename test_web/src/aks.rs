@@ -4,13 +4,17 @@ use std::collections::HashMap;
 
 // #[wasm_bindgen]
 pub fn aks_test(n: i32) -> i32 {
+    // step 0
+    if n < 2 {
+        return 0;
+    }
     // step 1
     if perfect_power(n) {
         return 1;
     }
     // step 2
     let r = smallestR(n);
-    println!("r={}",r);
+    // println!("r={}",r);
     if gcd(r,n) != 1 {
         return 2;
     }
@@ -20,7 +24,7 @@ pub fn aks_test(n: i32) -> i32 {
     }
     // step 4
     if n <= r {
-        return 4;
+        return 0;
     }
     // step 5
     if step_5(n,r) {
@@ -74,14 +78,13 @@ fn gcd(a_in: i32, b_in: i32) -> i32 {
 }
 
 // Multiplicative order
+// a^k == 1 mod n
 pub fn m_order(a: i32, n: i32) -> Option<i32> {
-    // println!("{}-{}",a,n);
     if gcd(a,n) != 1 {
         return None;
     }
     let mut r = 1;
     for k in 1..n {
-        // println!("{}",k);
         r = (r*a) % n;
         if r == 1 {
             return Some(k);
@@ -93,18 +96,13 @@ pub fn m_order(a: i32, n: i32) -> Option<i32> {
 // part of step 2
 fn smallestR(n: i32) -> i32 {
     let log_side = ((n as f64).log(2.0)).powi(2) as i32;
-    // println!("{}",log_side);
-    let mut r = 2;
+    let mut r = 1;
     let mut ord_side = 0;
-    if phi(n) <= log_side {
-
-    }
     while ord_side <= log_side {
-        // println!("{}-{}",ord_side,r);
+        r = r + 1;
         if let Some(new_ord) = m_order(n,r) {
             ord_side = new_ord;
         }
-        r = r + 1;
     }
     return r;
 }
