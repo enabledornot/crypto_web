@@ -1,51 +1,90 @@
 // use wasm_bindgen::prelude::*;
 // use js_sys::Array;
 use std::collections::HashMap;
+use std::fmt;
+
+// #[wasm_bindgen(getter_with_clone)]
+#[derive(Debug)]
+pub struct AksResult {
+    pub result: bool,
+    pub r: u32,
+    pub step: u32
+}
 
 // #[wasm_bindgen]
-pub fn aks_test(n: i32) -> i32 {
+pub fn aks_test(n_in: u32) -> AksResult {
+    let n = n_in as u128;
     // step 0
     if n < 2 {
-        return 0;
+        return AksResult {
+            result: false,
+            r: 0,
+            step: 0,
+        };
     }
     // step 1
     if perfect_power(n) {
-        return 1;
+        return AksResult {
+            result: false,
+            r: 0,
+            step: 1,
+        };
     }
     // step 2
     let r = smallestR(n);
-    // println!("r={}",r);
+    // println!("{}",r);
     if gcd(r,n) != 1 {
-        return 2;
+        return AksResult {
+            result: false,
+            r: r as u32,
+            step: 2
+        };
     }
     // // step 3
     if aDivN(n,r) {
-        return 3;
+        return AksResult {
+            result: false,
+            r: r as u32,
+            step: 3,
+        };
     }
     // step 4
     if n <= r {
-        return 0;
+        return AksResult {
+            result: true,
+            r: r as u32,
+            step: 4,
+        };
     }
     // step 5
+    // println!("begin step 5");
     if step_5(n,r) {
-        return 0;
+        return AksResult {
+            result: true,
+            r: r as u32,
+            step: 5,
+        };
     }
     else {
-        return 5;
+        return AksResult {
+            result: false,
+            r: r as u32,
+            step: 5,
+        };
     }
     // return r;
 }
 
 // this method computes whether a given number is a perfect power
 // step 1
-pub fn perfect_power(n: i32) -> bool {
+pub fn perfect_power(n: u128) -> bool {
     let mut e = 2;
     loop {
-        if 2_i32.pow(e) > n {
+        if 2_u128.pow(e) > n {
             return false;
         }
-        let mut low = 0_i32;
-        let mut high = 1_i32;
+        let mut low = 0_u128;
+        let mut high = 1_u128;
         while high.pow(e) <= n {
             high = high * 2;
         }
@@ -66,7 +105,7 @@ pub fn perfect_power(n: i32) -> bool {
     return true;
 }
 // euclidian algortihm
-fn gcd(a_in: i32, b_in: i32) -> i32 {
+fn gcd(a_in: u128, b_in: u128) -> u128 {
     let mut a = a_in;
     let mut b = b_in;
     while b != 0 {
@@ -79,7 +118,7 @@ fn gcd(a_in: i32, b_in: i32) -> i32 {
 
 // Multiplicative order
 // a^k == 1 mod n
-pub fn m_order(a: i32, n: i32) -> Option<i32> {
+pub fn m_order(a: u128, n: u128) -> Option<u128> {
     if gcd(a,n) != 1 {
         return None;
     }
@@ -94,8 +133,8 @@ pub fn m_order(a: i32, n: i32) -> Option<i32> {
 }
 
 // part of step 2
-fn smallestR(n: i32) -> i32 {
-    let log_side = ((n as f64).log(2.0)).powi(2) as i32;
+fn smallestR(n: u128) -> u128 {
+    let log_side = ((n as f64).log(2.0)).powi(2) as u128;
     let mut r = 1;
     let mut ord_side = 0;
     while ord_side <= log_side {
@@ -108,7 +147,7 @@ fn smallestR(n: i32) -> i32 {
 }
 
 // step 3
-fn aDivN(n: i32, r: i32) -> bool {
+fn aDivN(n: u128, r: u128) -> bool {
     for a in 2..=r.min(n-1) {
         if n % a == 0 {
             return true;
@@ -117,7 +156,7 @@ fn aDivN(n: i32, r: i32) -> bool {
     return false;
 }
 
-fn phi(n: i32) -> i32 {
+fn phi(n: u128) -> u128 {
     let prime_factors = primeFac(n);
     let mut prod = 1;
     for (p, &k) in &prime_factors {
@@ -126,12 +165,12 @@ fn phi(n: i32) -> i32 {
     return prod;
 }
 
-fn add_or_inc(map: &mut HashMap<i32, i32>, key: i32) {
+fn add_or_inc(map: &mut HashMap<u128, u128>, key: u128) {
     let counter = map.entry(key).or_insert(0);
     *counter += 1;
 }
-// this is probably not the fastest
-fn primeFac(n: i32) -> HashMap<i32,i32> {
+
+fn primeFac(n: u128) -> HashMap<u128,u128> {
     let mut pfacs = HashMap::new();
     let mut num = n;
     while num % 2 == 0 {
@@ -139,7 +178,7 @@ fn primeFac(n: i32) -> HashMap<i32,i32> {
         num = num / 2;
     }
 
-    for i in (3..=((num as f64).sqrt() as i32)).step_by(2) {
+    for i in (3..=((num as f64).sqrt() as u128)).step_by(2) {
         while num % i == 0 {
             add_or_inc(&mut pfacs, i);
             num = num / i;
@@ -150,76 +189,44 @@ fn primeFac(n: i32) -> HashMap<i32,i32> {
     }
     return pfacs;
 }
-// fn primeFac(n: i32) -> HashMap<i32,i32> {
-//     let mut pfacs = HashMap::new();
-//     let mut num = n;
-//     let mut cp = 2;
-//     while num != 1 {
-//         if num % cp == 0 {
-//             num = num / cp;
-//             add_or_inc(&mut pfacs, cp);
-//         }
-//         else {
-//             let mut keepLooking = true;
-//             cp += 1;
-//             while keepLooking {
-//                 keepLooking = false;
-//                 for p in pfacs.keys() {
-//                     if cp % p == 0 {
-//                         keepLooking = true;
-//                         break
-//                     }
-//                 }
-//             }
-//         }
-//     }
-//     return pfacs;
-// }
 
-fn apply_modxr(vec: &mut Vec<i32>, n: i32, r: i32) {
+pub fn apply_modxr(vec: &mut Vec<u128>, n: u128, r: u128) {
     while vec.len() > r as usize {
         let a = vec.pop();
-        let indx = (vec.len() + 1) % r as usize;
+        let indx = (vec.len() + 0) % r as usize;
         if let Some(a_real) = a {
             vec[indx] = (vec[indx] + a_real) % n;
         }
     }
 }
 
-fn offset_add(vec: &mut Vec<i32>, n: i32) {
+fn offset_add(vec: &mut Vec<u128>, n: u128) {
     vec.insert(0,vec[0]);
     for i in 2..vec.len() {
         vec[i-1] = (vec[i-1] + vec[i]) % n;
     }
 }
 
-fn generate_pascal(level: i32, r: i32, n: i32) -> Vec<i32> {
+pub fn generate_pascal(level: u128, r: u128, n: u128) -> Vec<u128> {
     let mut vec = vec![1,1];
-    for _ in 1..n {
+    for i in 1..level {
         offset_add(&mut vec, n);
+        apply_modxr(&mut vec, n, r);
     }
     return vec;
 }
 
 // step 5
-fn step_5(n: i32, r: i32) -> bool {
+fn step_5(n: u128, r: u128) -> bool {
     let phi_r = phi(r) as f64;
     let n_log = (n as f64).log(2.0);
-    let a_bound: i32 = ((phi_r).sqrt() * n_log).floor() as i32;
-    let nth_pascal = generate_pascal(n,r,n);
-    for a in 1..=a_bound {
-        let mut my_pascal = nth_pascal.clone();
-        let mut a_powd = 1;
-        for (i, x) in my_pascal.iter_mut().enumerate() {
-            *x = (*x * a_powd) % n;
-            a_powd = (a_powd * a) % n;
-        }
-        my_pascal.remove(0);
-        my_pascal.pop();
-        for x in my_pascal.iter() {
-            if *x != 0 {
-                return false;
-            }
+    let a_bound: u128 = ((phi_r).sqrt() * n_log).floor() as u128;
+    let mut nth_pascal = generate_pascal(n,r,n);
+    nth_pascal.remove((n % r) as usize);
+    nth_pascal.remove(0);
+    for x in nth_pascal.iter() {
+        if *x != 0 {
+            return false;
         }
     }
     return true;
