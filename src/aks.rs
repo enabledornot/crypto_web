@@ -2,40 +2,79 @@ use wasm_bindgen::prelude::*;
 use js_sys::Array;
 use std::collections::HashMap;
 
+#[wasm_bindgen(getter_with_clone)]
+pub struct AksResult {
+    pub result: bool,
+    pub r: i32,
+    pub step: i32
+}
+
 #[wasm_bindgen]
-pub fn aks_test(n: i32) -> i32 {
+pub fn aks_test(n: i32) -> AksResult {
+    // step 0
+    if n < 2 {
+        return AksResult {
+            result: false,
+            r: 0,
+            step: 0,
+        };
+    }
     // step 1
     if perfect_power(n) {
-        return 1;
+        return AksResult {
+            result: false,
+            r: 0,
+            step: 1,
+        };
     }
     // step 2
     let r = smallestR(n);
     if gcd(r,n) != 1 {
-        return 2;
+        return AksResult {
+            result: false,
+            r: r,
+            step: 2
+        };
     }
     // // step 3
     if aDivN(n,r) {
-        return 3;
+        return AksResult {
+            result: false,
+            r: r,
+            step: 3,
+        };
     }
     // step 4
     if n <= r {
-        return 4;
+        return AksResult {
+            result: true,
+            r: r,
+            step: 4,
+        };
     }
     // step 5
     if step_5(n,r) {
-        return 0;
+        return AksResult {
+            result: true,
+            r: r,
+            step: 5,
+        };
     }
     else {
-        return 5;
+        return AksResult {
+            result: false,
+            r: r,
+            step: 5,
+        };
     }
-    return -1;
+    // return r;
 }
 
 // this method computes whether a given number is a perfect power
 // step 1
 pub fn perfect_power(n: i32) -> bool {
     let mut e = 2;
-    while true {
+    loop {
         if 2_i32.pow(e) > n {
             return false;
         }
@@ -73,7 +112,8 @@ fn gcd(a_in: i32, b_in: i32) -> i32 {
 }
 
 // Multiplicative order
-fn m_order(a: i32, n: i32) -> Option<i32> {
+// a^k == 1 mod n
+pub fn m_order(a: i32, n: i32) -> Option<i32> {
     if gcd(a,n) != 1 {
         return None;
     }
@@ -90,13 +130,13 @@ fn m_order(a: i32, n: i32) -> Option<i32> {
 // part of step 2
 fn smallestR(n: i32) -> i32 {
     let log_side = ((n as f64).log(2.0)).powi(2) as i32;
-    let mut r = 2;
+    let mut r = 1;
     let mut ord_side = 0;
     while ord_side <= log_side {
-        if let Some(new_ord) = m_order(r,n) {
+        r = r + 1;
+        if let Some(new_ord) = m_order(n,r) {
             ord_side = new_ord;
         }
-        r = r + 1;
     }
     return r;
 }
@@ -124,29 +164,23 @@ fn add_or_inc(map: &mut HashMap<i32, i32>, key: i32) {
     let counter = map.entry(key).or_insert(0);
     *counter += 1;
 }
-// this is probably not the fastest
+
 fn primeFac(n: i32) -> HashMap<i32,i32> {
     let mut pfacs = HashMap::new();
     let mut num = n;
-    let mut cp = 2;
-    while num != 1 {
-        if num % cp == 0 {
-            num = num / cp;
-            add_or_inc(&mut pfacs, cp);
+    while num % 2 == 0 {
+        add_or_inc(&mut pfacs, 2);
+        num = num / 2;
+    }
+
+    for i in (3..=((num as f64).sqrt() as i32)).step_by(2) {
+        while num % i == 0 {
+            add_or_inc(&mut pfacs, i);
+            num = num / i;
         }
-        else {
-            let mut keepLooking = true;
-            cp += 1;
-            while keepLooking {
-                keepLooking = false;
-                for p in pfacs.keys() {
-                    if cp % p == 0 {
-                        keepLooking = true;
-                        break
-                    }
-                }
-            }
-        }
+    }
+    if n > 2 {
+        add_or_inc(&mut pfacs, n);
     }
     return pfacs;
 }
