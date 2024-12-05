@@ -5,6 +5,10 @@ async function run() {
     init_rust();
     function calculate() {
         const p_prime = parseInt($("#prime_test").val());
+        if (p_prime > 4294967295) {
+            alert("prime too big!");
+            return;
+        }
         // var aes = [];
         // $(".a_input.input").each(function(index, element) {
         //     const value = element.value;
@@ -18,13 +22,20 @@ async function run() {
         // for (var i = 0; i < pw.length; i++) {
         //     $('#fermat_eq').append(`<p> \\[${aes[i]}^{${p_prime-1}} \\mod ${p_prime} \\equiv ${pw[i]}\\] </p>`);
         // }
-        // if (c) {
-        //     $('#result').text(`${p_prime} is probably prime`);
-        // }
-        // else {
-        //     $('#result').text(`${p_prime} is not prime`);
-        // }
-        $('#result').text(`${c} from rust`)
+        $('#step_stopped').text(`The Algorithm stopped on step ${step}`);
+        if (r == 0) {
+            $('#r_value').text("No r value was calculated");
+        }
+        else {
+            $('#r_value').text(`r was calculated to be ${r}`);
+        }
+        if (c) {
+            $('#result').text(`${p_prime} is prime`);
+        }
+        else {
+            $('#result').text(`${p_prime} is not prime`);
+        }
+        // $('#result').text(`${c} from rust`)
         MathJax.typeset();
 
     }

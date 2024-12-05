@@ -5,6 +5,10 @@ async function run() {
     init_rust();
     function calculateSum() {
         const p_prime = parseInt($("#prime_test").val());
+        if (p_prime > 4294967295) {
+            alert("prime too big!");
+            return;
+        }
         if (p_prime % 2 == 0) {
             if (p_prime != 2) {
                 $('#result').text(`${p_prime} is not prime since it is even and the test does not apply`);

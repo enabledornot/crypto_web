@@ -11,7 +11,7 @@ fn main() {
     // aks::apply_modxr(&mut pasc,100,2);
     // println!("{:?}",pasc);
     // let mut vec![1,3,3,1];
-    let result = aks::aks_test(893905393);
+    let result = aks::aks_test(3404290429);
     println!("{}",result.result);
     // println!("{}",aks::aks_test(3));
     // let rslt = aks::aks_test(79);

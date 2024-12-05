@@ -5,6 +5,10 @@ async function run() {
     init_rust();
     function calculateSum() {
         const p_prime = parseInt($("#prime_test").val());
+        if (p_prime > 4294967295) {
+            alert("prime too big!");
+            return;
+        }
         var aes = [];
         $(".a_input.input").each(function(index, element) {
             const value = element.value;
