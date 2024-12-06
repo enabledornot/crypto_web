@@ -9,6 +9,9 @@ async function run() {
             alert("prime too big!");
             return;
         }
+        if (p_prime < 2) {
+            alert("prime too small!");
+        }
         if (p_prime % 2 == 0) {
             if (p_prime != 2) {
                 $('#result').text(`${p_prime} is not prime since it is even and the test does not apply`);

@@ -36,6 +36,8 @@ version = "0.1.0"
 dependencies = [
  "console_error_panic_hook",
  "js-sys",
+ "num-bigint",
+ "num-traits",
  "wasm-bindgen",
 ]
 

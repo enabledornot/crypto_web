@@ -1,14 +1,18 @@
 use wasm_bindgen::prelude::*;
 use js_sys::Array;
 use std::collections::HashMap;
-
+use num_bigint::{BigInt, BigUint};
+use num_traits::FromPrimitive;
+use num_traits::ToPrimitive;
 #[wasm_bindgen(getter_with_clone)]
 pub struct AksResult {
     pub result: bool,
     pub r: u32,
     pub step: u32
 }
-
+// This is the main function which is called from javascript
+// It receives the question prime and returns the AksResult
+// Struct which communicates the data to be displayed on the website
 #[wasm_bindgen]
 pub fn aks_test(n_in: u32) -> AksResult {
     let n = n_in as u128;
@@ -72,6 +76,7 @@ pub fn aks_test(n_in: u32) -> AksResult {
 }
 
 // this method computes whether a given number is a perfect power
+// using a binary search approach
 // step 1
 pub fn perfect_power(n: u128) -> bool {
     let mut e = 2;
@@ -100,7 +105,7 @@ pub fn perfect_power(n: u128) -> bool {
     }
     return true;
 }
-// euclidian algortihm
+// euclidean algorithm
 fn gcd(a_in: u128, b_in: u128) -> u128 {
     let mut a = a_in;
     let mut b = b_in;
@@ -114,6 +119,7 @@ fn gcd(a_in: u128, b_in: u128) -> u128 {
 
 // Multiplicative order
 // a^k == 1 mod n
+// Uses the brute force method (I dont think there is a quicker way to do this)
 pub fn m_order(a: u128, n: u128) -> Option<u128> {
     if gcd(a,n) != 1 {
         return None;
@@ -128,7 +134,7 @@ pub fn m_order(a: u128, n: u128) -> Option<u128> {
     return None;
 }
 
-// part of step 2
+// finds the smallest R that satisfies the given conditions
 fn smallestR(n: u128) -> u128 {
     let log_side = ((n as f64).log(2.0)).powi(2) as u128;
     let mut r = 1;
@@ -143,6 +149,7 @@ fn smallestR(n: u128) -> u128 {
 }
 
 // step 3
+// This is simply step 3
 fn aDivN(n: u128, r: u128) -> bool {
     for a in 2..=r.min(n-1) {
         if n % a == 0 {
@@ -151,7 +158,7 @@ fn aDivN(n: u128, r: u128) -> bool {
     }
     return false;
 }
-
+// This calculates phi of n using the provided formula
 fn phi(n: u128) -> u128 {
     let prime_factors = primeFac(n);
     let mut prod = 1;
@@ -160,12 +167,13 @@ fn phi(n: u128) -> u128 {
     }
     return prod;
 }
-
+// Helper method for prime factorization
 fn add_or_inc(map: &mut HashMap<u128, u128>, key: u128) {
     let counter = map.entry(key).or_insert(0);
     *counter += 1;
 }
-
+// Finds the prime factorization for a number
+// This is needed in order to find phi r
 fn primeFac(n: u128) -> HashMap<u128,u128> {
     let mut pfacs = HashMap::new();
     let mut num = n;
@@ -185,7 +193,7 @@ fn primeFac(n: u128) -> HashMap<u128,u128> {
     }
     return pfacs;
 }
-
+// Below are helper functions for generate pascal and step 5
 pub fn apply_modxr(vec: &mut Vec<u128>, n: u128, r: u128) {
     while vec.len() > r as usize {
         let a = vec.pop();
@@ -202,7 +210,8 @@ fn offset_add(vec: &mut Vec<u128>, n: u128) {
         vec[i-1] = (vec[i-1] + vec[i]) % n;
     }
 }
-
+// This is the original implementation of generate pascal
+// It is still relatively slow since it performs an iteration for each level
 pub fn generate_pascal(level: u128, r: u128, n: u128) -> Vec<u128> {
     let mut vec = vec![1,1];
     for i in 1..level {
@@ -213,7 +222,7 @@ pub fn generate_pascal(level: u128, r: u128, n: u128) -> Vec<u128> {
 }
 // This is an alternative version of generate pascal
 // It uses an optimised algorithm although needs to make
-// Use of bigint which significantly 
+// Use of bigint which can improve performance but still not fast enough
 pub fn generate_pascal_fast(level: u128, r: u128, n: u128) -> Vec<u128> {
     let mut vec = vec![0];
     let mut last: BigInt = 1.into();

@@ -9,6 +9,10 @@ async function run() {
             alert("prime too big!");
             return;
         }
+        // if (p_prime < 2) {
+        //     alert("prime too small!");
+        //     return;
+        // }
         // var aes = [];
         // $(".a_input.input").each(function(index, element) {
         //     const value = element.value;

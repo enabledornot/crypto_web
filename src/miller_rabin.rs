@@ -8,7 +8,10 @@ pub struct MillerRabinResult {
     pub result_a: Array,
     pub number_result: Array,
 }
-
+// This loads in the javascript array converts it to rust
+// runs the check prime method and creates a new array with the results
+// Most of this code just deals with loading the array of a values
+// from javascript and building the arrays to be sent back to javascript
 #[wasm_bindgen]
 pub fn miller_rabin_test(t_prime: u32, aes: js_sys::Array) -> MillerRabinResult {
     let (s,d) = find_s_d(t_prime);
@@ -32,6 +35,8 @@ pub fn miller_rabin_test(t_prime: u32, aes: js_sys::Array) -> MillerRabinResult 
         number_result: eq_rslts,
     }
 }
+// this checks to see if the vector returned from 
+// a primality test is valid
 fn check_prime_test(vec: &Vec<u32>, modulus: u32) -> bool {
     if vec.is_empty() {
         return false;
@@ -46,6 +51,7 @@ fn check_prime_test(vec: &Vec<u32>, modulus: u32) -> bool {
     }
     return false;
 }
+// checks if a given prime meets the conditions for s & d
 fn check_prime(a: u32, s: u32, d: u32, modulus: u32) -> (bool, Vec<u32>) {
     let mut rpower = d;
     let mut results: Vec<u32> = Vec::new();
@@ -55,7 +61,7 @@ fn check_prime(a: u32, s: u32, d: u32, modulus: u32) -> (bool, Vec<u32>) {
     }
     return (check_prime_test(&results, modulus),results);
 }
-
+// finds s and d for a given prime
 fn find_s_d(n: u32) -> (u32, u32) {
     let mut s = 0;
     let mut current_n = n-1;
@@ -65,7 +71,7 @@ fn find_s_d(n: u32) -> (u32, u32) {
     }
     return (s,current_n);
 }
-
+// efficient modular power function
 fn mod_pow(number: u32, power: u32, modulus: u32) -> u32 {
     let mut result: u32 = 1;
     let mut current: u32 = number;
