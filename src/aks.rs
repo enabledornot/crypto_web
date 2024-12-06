@@ -211,9 +211,30 @@ pub fn generate_pascal(level: u128, r: u128, n: u128) -> Vec<u128> {
     }
     return vec;
 }
+// This is an alternative version of generate pascal
+// It uses an optimised algorithm although needs to make
+// Use of bigint which significantly 
+pub fn generate_pascal_fast(level: u128, r: u128, n: u128) -> Vec<u128> {
+    let mut vec = vec![0];
+    let mut last: BigInt = 1.into();
+    for i in 1..r {
+        vec.push(0);
+    }
+    for k in 0..=level {
+        let newVec: BigInt = (vec[(k % r) as usize] + last.clone()) % n;
+        match newVec.to_u128() {
+            Some(val) => vec[(k % r) as usize] = val,
+            None => todo!(),
+        }
+        last = last * (level-k) / (k+1);
+    }
+    return vec;
+}
 
 // step 5
-// This program generates pascals triangle and confirms 
+// This program generates pascals triangle and confirms functionality
+// There is a performance issue present in the generate pascal function meaning
+// This means it can take a very long time to complete step 5
 fn step_5(n: u128, r: u128) -> bool {
     let phi_r = phi(r) as f64;
     let n_log = (n as f64).log(2.0);

@@ -243,10 +243,6 @@ pub fn generate_pascal_fast(level: u128, r: u128, n: u128) -> Vec<u128> {
             Some(val) => vec[(k % r) as usize] = val,
             None => todo!(),
         }
-        // vec[(k % r) as usize] = newVec.into();
-        // println!("{} * ({}-{}) / {} = {}   {}",last,level,k,k+1,last * (level-k) / (k+1), last % n);
-        // last = mod_divide(last*(level-k),k+1,n);
-        // println!("{:?}",last);
         last = last * (level-k) / (k+1);
     }
     return vec;

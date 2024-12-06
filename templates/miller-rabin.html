@@ -2,7 +2,18 @@
 
 {% block page %}
 <h1>The Miller-Rabin Primality Test</h1>
-<p>Put description here</p>
+<p>
+    \[
+    \text{Choose an integer } n \text{ that we want to test.} \ 
+    \text{Determine integer } k \text{ and odd integer } m \text{ by solving } n - 1 = 2^k \cdot m. \ 
+    \text{Choose an integer } a \text{ such that } 1 < a < n - 1. \ 
+    b0 = a^m \mod{n}. \quad b_0 \equiv \pm 1 \implies n \text{ is probably prime by FLT.} \ 
+    b_1 = b_0^2 \mod{n}. \quad b_1 = -1 \implies n \text{ is probably prime by FLT.} \quad b_1 = 1 \implies n \text{ is composite.} \ 
+    b_2 = b_1^2 \mod{n}. \quad b_2 = -1 \implies n \text{ is probably prime by FLT.} \quad b_2 = 1 \implies n \text{ is composite.} \ 
+    \vdots \
+    b{k-1} = b{k-2}^2 \mod{n}. \quad b{k-1} \neq -1 \implies n \text{ is composite.}
+\]
+</p>
 <label for="prime_test">Enter Potential Prime:</label>
     <input type="number" id="prime_test" name="prime_test" min="0">
     <div id="multi-input" class="a_input outer">

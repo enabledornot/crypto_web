@@ -2,11 +2,25 @@
 
 {% block page %}
 <h1>The Fermat Primality Test</h1>
-<p>Put description here</p>
+<script>
+
+</script>
+<p>
+    \[
+    \begin{array}{l}
+    \text{1. Choose an integer } n \text{ that we want to test.} \\
+    \text{2. Choose an integer } a \text{ such that } 1 < a < n - 1. \\
+    \text{3. Compute } a^{n - 1} \mod n. \\
+    \text{4. If } a^{n - 1} \not\equiv 1 \mod n, \text{ then } n \text{ is composite.} \\
+    \text{5. If } a^{n - 1} \equiv 1 \mod n, \text{ then } n \text{ is probably prime.}
+    \end{array}
+    \]
+</p>
+<br>
 <label for="prime_test">Enter Potential Prime:</label>
     <input type="number" id="prime_test" name="prime_test" min="0">
     <div id="multi-input" class="a_input outer">
-        <label for="a_1">A1 = </label>
+        <label for="a_1">A = </label>
         <input type="number" id="a_1" name="a_1" min="0" class="a_input input">
     </div>
     <button id="cloneButton">Add More A</button>
