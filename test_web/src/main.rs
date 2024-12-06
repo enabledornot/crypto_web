@@ -12,7 +12,7 @@ fn main() {
     // println!("{:?}",pasc);
     // let mut vec![1,3,3,1];
 
-    let result = aks::aks_test(3404290423);
+    let result = aks::aks_test(1601);
     println!("{}",result.result);
     // println!("{:?}",aks::generate_pascal(45,5,45));
     // println!("{:?}",aks::generate_pascal_fast(45,5,45));

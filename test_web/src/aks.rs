@@ -1,18 +1,18 @@
 // use wasm_bindgen::prelude::*;
 // use js_sys::Array;
 use std::collections::HashMap;
-use std::fmt;
 use num_bigint::{BigInt, BigUint};
 use num_traits::FromPrimitive;
 use num_traits::ToPrimitive;
 // #[wasm_bindgen(getter_with_clone)]
-#[derive(Debug)]
 pub struct AksResult {
     pub result: bool,
     pub r: u32,
     pub step: u32
 }
-
+// This is the main function which is called from javascript
+// It receives the question prime and returns the AksResult
+// Struct which communicates the data to be displayed on the website
 // #[wasm_bindgen]
 pub fn aks_test(n_in: u32) -> AksResult {
     let n = n_in as u128;
@@ -34,7 +34,6 @@ pub fn aks_test(n_in: u32) -> AksResult {
     }
     // step 2
     let r = smallestR(n);
-    // println!("{}",r);
     if gcd(r,n) != 1 {
         return AksResult {
             result: false,
@@ -59,7 +58,6 @@ pub fn aks_test(n_in: u32) -> AksResult {
         };
     }
     // step 5
-    // println!("begin step 5");
     if step_5(n,r) {
         return AksResult {
             result: true,
@@ -78,6 +76,7 @@ pub fn aks_test(n_in: u32) -> AksResult {
 }
 
 // this method computes whether a given number is a perfect power
+// using a binary search approach
 // step 1
 pub fn perfect_power(n: u128) -> bool {
     let mut e = 2;
@@ -106,7 +105,7 @@ pub fn perfect_power(n: u128) -> bool {
     }
     return true;
 }
-// euclidian algortihm
+// euclidean algorithm
 fn gcd(a_in: u128, b_in: u128) -> u128 {
     let mut a = a_in;
     let mut b = b_in;
@@ -120,6 +119,7 @@ fn gcd(a_in: u128, b_in: u128) -> u128 {
 
 // Multiplicative order
 // a^k == 1 mod n
+// Uses the brute force method (I dont think there is a quicker way to do this)
 pub fn m_order(a: u128, n: u128) -> Option<u128> {
     if gcd(a,n) != 1 {
         return None;
@@ -134,7 +134,7 @@ pub fn m_order(a: u128, n: u128) -> Option<u128> {
     return None;
 }
 
-// part of step 2
+// finds the smallest R that satisfies the given conditions
 fn smallestR(n: u128) -> u128 {
     let log_side = ((n as f64).log(2.0)).powi(2) as u128;
     let mut r = 1;
@@ -149,6 +149,7 @@ fn smallestR(n: u128) -> u128 {
 }
 
 // step 3
+// This is simply step 3
 fn aDivN(n: u128, r: u128) -> bool {
     for a in 2..=r.min(n-1) {
         if n % a == 0 {
@@ -157,7 +158,7 @@ fn aDivN(n: u128, r: u128) -> bool {
     }
     return false;
 }
-
+// This calculates phi of n using the provided formula
 fn phi(n: u128) -> u128 {
     let prime_factors = primeFac(n);
     let mut prod = 1;
@@ -166,12 +167,13 @@ fn phi(n: u128) -> u128 {
     }
     return prod;
 }
-
+// Helper method for prime factorization
 fn add_or_inc(map: &mut HashMap<u128, u128>, key: u128) {
     let counter = map.entry(key).or_insert(0);
     *counter += 1;
 }
-
+// Finds the prime factorization for a number
+// This is needed in order to find phi r
 fn primeFac(n: u128) -> HashMap<u128,u128> {
     let mut pfacs = HashMap::new();
     let mut num = n;
@@ -191,7 +193,7 @@ fn primeFac(n: u128) -> HashMap<u128,u128> {
     }
     return pfacs;
 }
-
+// Below are helper functions for generate pascal and step 5
 pub fn apply_modxr(vec: &mut Vec<u128>, n: u128, r: u128) {
     while vec.len() > r as usize {
         let a = vec.pop();
@@ -208,29 +210,19 @@ fn offset_add(vec: &mut Vec<u128>, n: u128) {
         vec[i-1] = (vec[i-1] + vec[i]) % n;
     }
 }
-fn euclidian_algorithm(a: u128, b: u128) -> (u128, u128) {
-    println!("{}-{}",a,b);
-    if a % b == 1 {
-        return (1, a/b);
+// This is the original implementation of generate pascal
+// It is still relatively slow since it performs an iteration for each level
+pub fn generate_pascal(level: u128, r: u128, n: u128) -> Vec<u128> {
+    let mut vec = vec![1,1];
+    for i in 1..level {
+        offset_add(&mut vec, n);
+        apply_modxr(&mut vec, n, r);
     }
-    else if a % b == 0 {
-        return (0,0)
-    }
-    else {
-        let (f1, f2) = euclidian_algorithm(b, a%b);
-        return (f2, f1 - f2*(a/b));
-    }
+    return vec;
 }
-fn mod_divide(a: u128, b: u128, n: u128) -> u128 {
-    if a == b {
-        return 1;
-    }
-    if a == 0 {
-        return 0;
-    }
-    let (f1, f2) = euclidian_algorithm(n, a);
-    return (f2 * b) % n;
-}
+// This is an alternative version of generate pascal
+// It uses an optimised algorithm although needs to make
+// Use of bigint which can improve performance but still not fast enough
 pub fn generate_pascal_fast(level: u128, r: u128, n: u128) -> Vec<u128> {
     let mut vec = vec![0];
     let mut last: BigInt = 1.into();
@@ -247,26 +239,30 @@ pub fn generate_pascal_fast(level: u128, r: u128, n: u128) -> Vec<u128> {
     }
     return vec;
 }
-pub fn generate_pascal(level: u128, r: u128, n: u128) -> Vec<u128> {
-    let mut vec = vec![1,1];
-    for i in 1..level {
-        offset_add(&mut vec, n);
-        apply_modxr(&mut vec, n, r);
-    }
-    return vec;
-}
 
 // step 5
+// This program generates pascals triangle and confirms functionality
+// There is a performance issue present in the generate pascal function meaning
+// This means it can take a very long time to complete step 5
 fn step_5(n: u128, r: u128) -> bool {
     let phi_r = phi(r) as f64;
     let n_log = (n as f64).log(2.0);
     let a_bound: u128 = ((phi_r).sqrt() * n_log).floor() as u128;
-    let mut nth_pascal = generate_pascal_fast(n,r,n);
-    nth_pascal.remove((n % r) as usize);
-    nth_pascal.remove(0);
-    for x in nth_pascal.iter() {
-        if *x != 0 {
-            return false;
+    let nth_pascal = generate_pascal_fast(n,r,n);
+    for a in 1..=a_bound {
+        let mut my_pascal = nth_pascal.clone();
+        let mut a_powd = 1;
+        for (i, x) in my_pascal.iter_mut().enumerate() {
+            *x = (*x * a_powd) % n;
+            a_powd = (a_powd * a) % n;
+        }
+        my_pascal.remove((n % r) as usize);
+        my_pascal.remove(0);
+        println!("{:?}",my_pascal);
+        for x in my_pascal.iter() {
+            if *x != 0 {
+                return false;
+            }
         }
     }
     return true;
