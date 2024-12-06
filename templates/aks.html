@@ -2,10 +2,22 @@
 
 {% block page %}
 <h1>
-    The AKS Primality Test
-</h1>
-<p>
+    The AKS Primality Test</h1>
+<script>
 
+</script>
+<p>
+    \[
+    \begin{array}{l}
+    \text{1. If } n \text{ is a perfect power, i.e. if } n = a^{b} \text{ for some integers } a, b > 1, \text{ then } n \text{ is composite.} \\
+    \text{2. Let } r \text{ be the smallest integer satisfying } \text{ord}_r(n) > (\log_2 n)^2. \text{ If } r, n \text{ are not relatively prime, then } n \text{ is composite.} \\
+    \text{3. For all } 2 \leq a \leq \min(r, n-1), \text{ if } a \mid n, \text{ then } n \text{ is composite.} \\
+    \text{4. If } n \leq r, \text{ then } n \text{ is prime.} \\
+    \text{5. For all } a \in \{ 1, 2, \dots, \left\lfloor \sqrt{\phi(r)} \log_2 n \right\rfloor\}, \text{ if for some integer } x, \\
+    \text{   } (x + a)^n \neq x^n + a \pmod{x^r - 1, n}, \text{ then } n \text{ is composite.} \\
+    \text{6. If none of the previous steps were conclusive, then } n \text{ is prime.}
+    \end{array}
+    \]
 </p>
 <label for="prime_test">Enter Potential Prime:</label>
     <input type="number" id="prime_test" name="prime_test" min="0">
