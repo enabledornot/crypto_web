@@ -213,16 +213,25 @@ pub fn generate_pascal(level: u128, r: u128, n: u128) -> Vec<u128> {
 }
 
 // step 5
+// This program generates pascals triangle and confirms 
 fn step_5(n: u128, r: u128) -> bool {
     let phi_r = phi(r) as f64;
     let n_log = (n as f64).log(2.0);
     let a_bound: u128 = ((phi_r).sqrt() * n_log).floor() as u128;
-    let mut nth_pascal = generate_pascal(n,r,n);
-    nth_pascal.remove((n % r) as usize);
-    nth_pascal.remove(0);
-    for x in nth_pascal.iter() {
-        if *x != 0 {
-            return false;
+    let nth_pascal = generate_pascal(n,r,n);
+    for a in 1..=a_bound {
+        let mut my_pascal = nth_pascal.clone();
+        let mut a_powd = 1;
+        for (i, x) in my_pascal.iter_mut().enumerate() {
+            *x = (*x * a_powd) % n;
+            a_powd = (a_powd * a) % n;
+        }
+        my_pascal.remove(0);
+        my_pascal.pop();
+        for x in my_pascal.iter() {
+            if *x != 0 {
+                return false;
+            }
         }
     }
     return true;
