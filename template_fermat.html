@@ -1,6 +1,25 @@
-{% extends 'base.html' %}
-
-{% block page %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="static/page.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h2>Crypto Web</h2>
+            <ul>
+                <li><a href="template_fermat.html">Fermat</a></li>
+                <li><a href="template_miller-rabin.html">Miller-Rabin</a></li>
+                <li><a href="template_aks.html">AKS</a></li>
+            </ul>
+        </div>
+        <div class="center">
+            
 <h1>The Fermat Primality Test</h1>
 <script>
 
@@ -34,4 +53,8 @@
     </div>
     <p id="result"></p>
     <script type="module" src="static/fermat.js"></script>
-{% endblock %}
+
+        </div>
+    </div>
+</body>
+</html>

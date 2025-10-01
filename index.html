@@ -4,27 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="static/page.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
-    <label for="prime_test">Enter Potential Prime:</label>
-    <input type="number" id="prime_test" name="prime_test" min="0">
-    <div id="multi-input" class="a_input outer">
-        <label for="a_1">A1 = </label>
-        <input type="number" id="a_1" name="a_1" min="0" class="a_input input">
+    <div class="container">
+        <div class="sidebar">
+            <h2>Crypto Web</h2>
+            <ul>
+                <li><a href="template_fermat.html">Fermat</a></li>
+                <li><a href="template_miller-rabin.html">Miller-Rabin</a></li>
+                <li><a href="template_aks.html">AKS</a></li>
+            </ul>
+        </div>
+        <div class="center">
+            
+            
+        </div>
     </div>
-    <button id="cloneButton">Add More A</button>
-    <button id="calculate">Calculate</button>
-    <div id="result_div">
-        <p id="is_prime"></p>
-        <p>
-            \[
-            a^p-1 \mod p \equiv 1
-            \]
-        </p>
-    </div>
-    <p id="result"></p>
-    <script type="module" src="app.js"></script>
 </body>
 </html>
