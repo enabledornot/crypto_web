@@ -38,7 +38,7 @@ jobs:
 
       - name: Freeze Flask app
         run: |
-          python freeze.py
+          python freezer.py
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
