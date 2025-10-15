@@ -1,4 +1,4 @@
-import init, {aks_test, init_rust} from "pkg/crypto_web.js"
+import init, {aks_test, init_rust} from "../pkg/crypto_web.js"
 
 async function run() {
     await init();
